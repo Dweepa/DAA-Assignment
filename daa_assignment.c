@@ -149,10 +149,13 @@ void* intal_diff(void* intal1, void* intal2)
 {
     char* num1 = intal2str(intal1);
     char* num2 = intal2str(intal2);
+    
+    printf("COMPARE %d \n",strcmp(num2,num1));
+
     char* int1,*int2;
     int n1=strlen(num1),n2=strlen(num2);
     int i,j,max=0,min=0 ,x=0,temp=0;
-    if(n1>n2)
+    if(n1>n2 || ((n1==n2)&&(strcmp(num2,num1)<0)))
     {
         max=n1;
         min=n2;
@@ -163,7 +166,7 @@ void* intal_diff(void* intal1, void* intal2)
         strcpy(int1,num1);
         strcpy(int2,num2);
     }
-    else
+    else if(n2>n1 ||((n1==n2)&&(strcmp(num2,num1)>=0)))
     {
         max=n2;
         min=n1;
@@ -174,6 +177,7 @@ void* intal_diff(void* intal1, void* intal2)
         strcpy(int1,num2);
         strcpy(int2,num1);
     }
+
     char* diff = (char*)malloc(max+1);
     for(x=0;x<max;x++)
         diff[x]='0';
@@ -203,7 +207,7 @@ void* intal_diff(void* intal1, void* intal2)
             max--;
             printf("%d %d %d\n",i,j,max);
     }
-    for(x=max;x>0;x--)
+    for(x=max;x>=0;x--)
     {
         printf("x:%2d  ",x);
         diff[max]=((int1[x]-'0')-(diff[max]-'0'))+'0';
@@ -212,10 +216,7 @@ void* intal_diff(void* intal1, void* intal2)
         max--;
         
     }
-    if(d>1)
-        diff[0]=((int1[0]-'0')-(diff[0]-'0'))+'0';
-
-    printf("y:%2d  ",x);
+        printf("y:%2d  ",x);
     printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
     printf("%s   \n",diff);
     x=0;
@@ -298,8 +299,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-	char *str1 = "12040593581025012501259998";
-	char *str2 = "1101298375120985710298752100";
+	char *str1 = "6233";
+	char *str2 = "6231";
 	void *intal1;
 	void *intal2;
 	void *sum;
