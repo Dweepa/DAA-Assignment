@@ -94,7 +94,7 @@ void* intal_add(void* intal1, void* intal2)
         sum[i]='0';
     sum[max+1]='\0';
      int d = max-min;
-    printf("sum: %s  min: %d  max: %d  d: %d\n", sum,min,max,d);
+    //printf("sum: %s  min: %d  max: %d  d: %d\n", sum,min,max,d);
     
    
     i=n1-1;
@@ -104,18 +104,18 @@ void* intal_add(void* intal1, void* intal2)
       if(max!=0)
       {
         sum[max]=((num1[i]-'0')+(num2[j]-'0')+(sum[max]-'0'))+'0';
-        printf("c:%d  ",sum[max]-'0');
+        //printf("c:%d  ",sum[max]-'0');
         if(sum[max]-'0'>9)
         {
             sum[max]=((sum[max]-'0')-10)+'0';
             sum[max-1]='1';
         }
-        printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);
+        //printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);
         i--;
         j--;
         max--;
-        printf("sum:%s   ",sum);
-        printf("%d %d %d\n",i,j,max);
+        //printf("sum:%s   ",sum);
+        //printf("%d %d %d\n",i,j,max);
      }
     else
         break;
@@ -123,7 +123,7 @@ void* intal_add(void* intal1, void* intal2)
     
     for(x=max-1;x>=0;x--)
     {
-        printf("x:%d  ",x);
+        //printf("x:%d  ",x);
         sum[max]=((num[x]-'0')+(sum[max]-'0'))+'0';
         
         if(sum[max]-'0'>9)
@@ -133,12 +133,12 @@ void* intal_add(void* intal1, void* intal2)
             
         }
         max--;
-        printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);
-        printf("%s   \n",sum);
+        //printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);
+        //printf("%s   \n",sum);
     }
-    printf("z:z  ");
+    /*printf("z:z  ");
     printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);
-    printf("%s   \n",sum);
+    printf("%s   \n",sum);*/
     if(sum[0]=='0')
         return sum+1;
     return sum;
@@ -149,10 +149,82 @@ void* intal_diff(void* intal1, void* intal2)
 {
     char* num1 = intal2str(intal1);
     char* num2 = intal2str(intal2);
-    int n1=strlen(num1);
-    int n2=strlen(num2);
-    int i=0;
-    return 0;
+    char* int1,*int2;
+    int n1=strlen(num1),n2=strlen(num2);
+    int i,j,max=0,min=0 ,x=0,temp=0;
+    if(n1>n2)
+    {
+        max=n1;
+        min=n2;
+        i=n1-1;
+        j=n2-1;
+        int1 = (char*)malloc(n1);
+        int2 = (char*)malloc(n2);
+        strcpy(int1,num1);
+        strcpy(int2,num2);
+    }
+    else
+    {
+        max=n2;
+        min=n1;
+        j=n1-1;
+        i=n2-1;
+        int1 = (char*)malloc(n2);
+        int2 = (char*)malloc(n1);
+        strcpy(int1,num2);
+        strcpy(int2,num1);
+    }
+    char* diff = (char*)malloc(max+1);
+    for(x=0;x<max;x++)
+        diff[x]='0';
+    diff[max+1]='\0';
+    int d = max-min;
+    printf("\nint1: %s   int2:%s\n",int1,int2);
+    printf("diff: %s  min: %d  max: %d  d: %d  i:%d  j:%d\n", diff,min,max,d,i,j);
+    
+    max--;
+    while(max>=d && i>=0 && j>=0)
+    {
+            temp = ((int1[i]-'0')-(int2[j]-'0')-(diff[max]-'0'));
+            printf("t:%2d  ",temp);
+            if(temp<0)
+            {
+                diff[max]=(temp+10)+'0';
+                diff[max-1]='1';
+            }
+            else
+            {
+                diff[max]=temp+'0';
+            }
+            printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
+            printf("diff:%s   ",diff);
+            i--;
+            j--;
+            max--;
+            printf("%d %d %d\n",i,j,max);
+    }
+    for(x=max;x>0;x--)
+    {
+        printf("x:%2d  ",x);
+        diff[max]=((int1[x]-'0')-(diff[max]-'0'))+'0';
+        printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
+        printf("%s   \n",diff);
+        max--;
+        
+    }
+    if(d>1)
+        diff[0]=((int1[0]-'0')-(diff[0]-'0'))+'0';
+
+    printf("y:%2d  ",x);
+    printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
+    printf("%s   \n",diff);
+    x=0;
+    while(diff[x]=='0'&& diff[x]!='\0')
+        x++;
+    printf("x: %d, diff:%lu\n",x,strlen(diff));
+    if(x==strlen(diff))
+        return "0";
+    return diff+x;
 }
 
 //Multiplies two intals and returns the product.
@@ -226,8 +298,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-	char *str1 = "998";
-	char *str2 = "100001";
+	char *str1 = "12040593581025012501259998";
+	char *str2 = "1101298375120985710298752100";
 	void *intal1;
 	void *intal2;
 	void *sum;
@@ -254,10 +326,10 @@ int main(int argc, char const *argv[]) {
 
 	sum = intal_add(intal1, intal2); //7000
 	printf("Sum: %s\n", intal2str(sum));
-/*
+
 	diff = intal_diff(intal1, intal2); //3000
 	printf("Diff: %s\n", intal2str(diff));
-
+/*
 	product = intal_multiply(intal1, intal2); //10000000
 	printf("Product: %s\n", intal2str(product));
 
