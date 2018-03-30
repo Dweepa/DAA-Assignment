@@ -245,7 +245,25 @@ char* rev(char* str)
     }
     return str;
 }
-
+char* itoa(int i, char b[]){
+    char const digit[] = "0123456789";
+    char* p = b;
+    if(i<0){
+        *p++ = '-';
+        i *= -1;
+    }
+    int shifter = i;
+    do{ //Move to where representation ends
+        ++p;
+        shifter = shifter/10;
+    }while(shifter);
+    *p = '\0';
+    do{ //Move back, inserting digits as u go
+        *--p = digit[i%10];
+        i = i/10;
+    }while(i);
+    return b;
+}
 void* intal_multiply(void* intal1, void* intal2)
 {
     char* num1 = intal2str(intal1);
@@ -455,8 +473,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-    char *str1 = "1040";
-    char *str2 = "1079";
+    char *str1 = "10435415";
+    char *str2 = "1075125125312";
     void *intal1;
     void *intal2;
     void *sum;
@@ -487,9 +505,8 @@ int main(int argc, char const *argv[]) {
      printf("Diff: %s\n", intal2str(diff));
      */
     
-    product = intal_multiply(intal1, intal2);
+    product = intal_multiply1(intal1, intal2);
     printf("Product: %s\n", intal2str(product));
-    
     /*quotient = intal_divide(intal1, intal2);
      printf("Quotient: %s\n", intal2str(quotient));
      
