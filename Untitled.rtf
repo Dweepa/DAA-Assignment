@@ -1,6 +1,6 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
-{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Italic;\f2\fmodern\fcharset0 Courier;
-}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Italic;
+\f3\fmodern\fcharset0 Courier;}
 {\colortbl;\red255\green255\blue255;\red0\green0\blue153;\red250\green250\blue250;\red38\green38\blue38;
 \red21\green158\blue3;\red154\green154\blue154;\red17\green137\blue135;\red20\green155\blue154;\red157\green0\blue172;
 \red0\green0\blue0;\red28\green0\blue207;\red196\green26\blue22;\red0\green116\blue0;\red88\green209\blue235;
@@ -11,25 +11,28 @@
 \csgenericrgb\c0\c0\c0;\csgenericrgb\c11000\c0\c81000;\csgenericrgb\c77000\c10200\c8600;\csgenericrgb\c0\c45600\c0;\cssrgb\c40000\c85098\c93725;
 \cssrgb\c15294\c15686\c13333;\cssrgb\c81569\c81569\c81569;\cssrgb\c97255\c97255\c94902;\cssrgb\c97647\c14902\c44706;\cssrgb\c68235\c50588\c100000;
 \cssrgb\c90196\c85882\c45490;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww25400\viewh16000\viewkind0
-\deftab720
+\paperw11900\paperh16840\margl1440\margr1440\vieww25400\viewh14580\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 https://gist.github.com/higuaro/bef613526fa3651ee2ef8ef874179f39\
+\
 \pard\pardeftab720\partightenfactor0
 
-\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\f1\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
 def\cf4  \cf5 karatsuba\cf4 (x,y):\
 \
       
-\f1\i \cf6 #base case
-\f0\i0 \cf4 \
+\f2\i \cf6 #base case
+\f1\i0 \cf4 \
       \cf2 if\cf4  x < \cf7 10\cf4  \cf2 and\cf4  y < \cf7 10\cf4 : 
-\f1\i \cf6 # in other words, if x and y are single digits
-\f0\i0 \cf4 \
+\f2\i \cf6 # in other words, if x and y are single digits
+\f1\i0 \cf4 \
         \cf2 return\cf4  x*y\
 \
        n = \cf8 max\cf4 (\cf8 len\cf4 (\cf8 str\cf4 (x)), \cf8 len\cf4 (\cf8 str\cf4 (y)))\
        m = \cf8 int\cf4 (ceil(\cf8 float\cf4 (n)/\cf7 2\cf4 ))   
-\f1\i \cf6 #Cast n into a float because n might lie outside the representable range of integers.
-\f0\i0 \cf4 \
+\f2\i \cf6 #Cast n into a float because n might lie outside the representable range of integers.
+\f1\i0 \cf4 \
 \
        x_H  = \cf8 int\cf4 (floor(x / \cf7 10\cf4 **m))\
        x_L = \cf8 int\cf4 (x % (\cf7 10\cf4 **m))\
@@ -38,8 +41,8 @@ def\cf4  \cf5 karatsuba\cf4 (x,y):\
        y_L = \cf8 int\cf4 (y % (\cf7 10\cf4 **m))\
 \
     
-\f1\i \cf6 #recursive steps
-\f0\i0 \cf4 \
+\f2\i \cf6 #recursive steps
+\f1\i0 \cf4 \
        a = karatsuba(x_H,y_H)\
        d = karatsuba(x_L,y_L)\
        e = karatsuba(x_H + x_L, y_H + y_L) -a -d\
@@ -140,7 +143,7 @@ def\cf4  \cf5 karatsuba\cf4 (x,y):\
 \
 \pard\pardeftab720\partightenfactor0
 
-\f2\fs24 \cf14 \cb15 int\cf16  \cf17 length\cf16  \cf18 =\cf16  \cf17 max(lhs.size(),\cf16  \cf17 rhs.size());\cf16 \
+\f3\fs24 \cf14 \cb15 int\cf16  \cf17 length\cf16  \cf18 =\cf16  \cf17 max(lhs.size(),\cf16  \cf17 rhs.size());\cf16 \
     \
     \cf14 while\cf16  \cf17 (lhs.size()\cf16  \cf18 <\cf16  \cf17 length)\cf16  \
       \cf17 lhs.insert(\cf19 0\cf17 ,\cf20 "0"\cf17 );\cf16 \
