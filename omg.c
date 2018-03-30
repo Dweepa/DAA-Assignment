@@ -231,22 +231,22 @@ void* intal_diff(void* intal1, void* intal2)
 }
 
 //Multiplies two intals and returns the product.
-typedef unsigned int uint32;
+/*typedef unsigned int uint32;
 
 enum PaddingType { LEFT, RIGHT };
-bool isZero(const string& oper) {
-    for (size_t i = 0, l = oper.size(); i < l; i++)
-        if (oper[i] != '0') return false;
-    return true;
+int isZero(char* oper) {
+    for (size_t i = 0, l = strlen(oper); i < l; i++)
+        if (oper[i] != '0') return 0;
+    return 1;
 }
-char* padString(const string& toPad, size_t paddingCountToAdd, char paddingChar, PaddingType paddingType = RIGHT) {
-    string s(paddingCountToAdd, paddingChar);
+char* padString(char* toPad, size_t paddingCountToAdd, char paddingChar, PaddingType paddingType = RIGHT) {
+    char* s(paddingCountToAdd, paddingChar);
     return paddingType == LEFT ? s + toPad : toPad + s;
 }
-char* removeLeftZeros(const string& value) {
+char* removeLeftZeros(char* value) {
     // Delete '0's from the left
-    if (value.size() > 1 && value[0] == '0') {
-        for (size_t i = 0, l = value.size(); i < l; i++) {
+    if (strlen(value) > 1 && value[0] == '0') {
+        for (size_t i = 0, l = strlen(value); i < l; i++) {
             if (value[i] == '0')
                 continue;
             return value.substr(i, l - i);
@@ -254,14 +254,14 @@ char* removeLeftZeros(const string& value) {
     }
     return value;
 }
-char*mulIntStringByChar(const string& op1, const char op2) {
+char*mulIntStringByChar(char*op1, char op2) {
     if (op2 == '0') return "0";
     if (op2 == '1') return op1;
     
     int carry = 0;
     int d0 = op2 - '0';
     char*r = "";
-    for (int j = op1.size() - 1; j >= 0; j--) {
+    for (int j = strlen(op1) - 1; j >= 0; j--) {
         int d1 = op1[j] - '0';
         int d = (d0 * d1) + carry;
         carry = d / 10;
@@ -272,12 +272,12 @@ char*mulIntStringByChar(const string& op1, const char op2) {
     reverse(r.begin(), r.end());
     return r;
 }
-char* subIntStrings(const string& op1, const string& op2) {
+char* subIntStrings(char*op1, char*op2) {
     if (op2 == "") return op1;
     
     char*total = "";
-    size_t op1Size = op1.size();
-    size_t op2Size = op2.size();
+    size_t op1Size = strlen(op1);
+    size_t op2Size = strlen(op2);
     
     uint32 carry = 0;
     for (int i = 0; i < op1Size; i++) {
@@ -293,12 +293,13 @@ char* subIntStrings(const string& op1, const string& op2) {
     reverse(total.begin(), total.end());
     return isZero(total) ? "0" : removeLeftZeros(total);
 }
-char* sumIntStrings(const string& op1, const string& op2) {
+char* sumIntStrings(char* &op1, char* &op2) {
     if (op2 == "") return op1;
     if (op1 == "") return op2;
     char*total = "";
-    size_t op1Size = op1.size();
-    size_t op2Size = op2.size();
+    
+    size_t op1Size = strlen(op1);
+    size_t op2Size = strlen(op2);
     size_t m = max(op1Size, op2Size);
     
     uint32 carry = 0;
@@ -313,7 +314,7 @@ char* sumIntStrings(const string& op1, const string& op2) {
     reverse(total.begin(), total.end());
     return total;
 }
-char*multKaratsuba(const string& oper1, const string& oper2) {
+char*multKaratsuba(char*oper1, char*oper2) {
     // 2 * O(n)
     if (isZero(oper1) || isZero(oper2)) {
         return "0";
@@ -324,8 +325,9 @@ char*multKaratsuba(const string& oper1, const string& oper2) {
     char*op2 = removeLeftZeros(oper2);
     
     // O(1) (theoritically)
-    size_t l1 = op1.size();
-    size_t l2 = op2.size();
+    
+    size_t l1 = strlen(op1);
+    size_t l2 = strlen(op2);
     
     if (l1 == 1 || l2 == 1)
         // O(1)
@@ -370,14 +372,105 @@ char*multKaratsuba(const string& oper1, const string& oper2) {
     return removeLeftZeros(res);
 }
 
-void* intal_multiply(void* intal1, void* intal2)
+void* intal_multiply1(void* intal1, void* intal2)
 {
     char* num1 = (char*) intal1;
     char* num2 = (char*)intal2;
     char* product = multKaratsuba(num1,num2);
     return product;
+}*/
+
+int makeEqualLength(string &str1, string &str2)
+{
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
+    if (len1 < len2)
+    {
+        for (int i = 0 ; i < len2 - len1 ; i++)
+            str1 = '0' + str1;
+        return len2;
+    }
+    else if (len1 > len2)
+    {
+        for (int i = 0 ; i < len1 - len2 ; i++)
+            str2 = '0' + str2;
+    }
+    return len1; // If len1 >= len2
 }
 
+// The main function that adds two bit sequences and returns the addition
+string addBitStrings( string first, string second )
+{
+    string result;  // To store the sum bits
+    
+    // make the lengths same before adding
+    int length = makeEqualLength(first, second);
+    int carry = 0;  // Initialize carry
+    
+    // Add all bits one by one
+    for (int i = length-1 ; i >= 0 ; i--)
+    {
+        int firstBit = first[i] - '0';
+        int secondBit = second[i] - '0';
+        
+        // boolean expression for sum of 3 bits
+        int sum = (firstBit ^ secondBit ^ carry)+'0';
+        
+        result = (char)sum + result;
+        
+        // boolean expression for 3-bit addition
+        carry = (firstBit&secondBit) | (secondBit&carry) | (firstBit&carry);
+    }
+    
+    // if overflow, then add a leading 1
+    if (carry)  result = '1' + result;
+    
+    return result;
+}
+
+// A utility function to multiply single bits of strings a and b
+int multiplyiSingleBit(string a, string b)
+{  return (a[0] - '0')*(b[0] - '0');  }
+
+// The main function that multiplies two bit strings X and Y and returns
+// result as long integer
+long int multiply(string X, string Y)
+{
+    // Find the maximum of lengths of x and Y and make length
+    // of smaller string same as that of larger string
+    int n = makeEqualLength(X, Y);
+    
+    // Base cases
+    if (n == 0) return 0;
+    if (n == 1) return multiplyiSingleBit(X, Y);
+    
+    int fh = n/2;   // First half of string, floor(n/2)
+    int sh = (n-fh); // Second half of string, ceil(n/2)
+    
+    // Find the first half and second half of first string.
+    // Refer http://goo.gl/lLmgn for substr method
+    string Xl = X.substr(0, fh);
+    string Xr = X.substr(fh, sh);
+    
+    // Find the first half and second half of second string
+    string Yl = Y.substr(0, fh);
+    string Yr = Y.substr(fh, sh);
+    
+    // Recursively calculate the three products of inputs of size n/2
+    long int P1 = multiply(Xl, Yl);
+    long int P2 = multiply(Xr, Yr);
+    long int P3 = multiply(addBitStrings(Xl, Xr), addBitStrings(Yl, Yr));
+    
+    // Combine the three products to get the final result.
+    return P1*(1<<(2*sh)) + (P3 - P1 - P2)*(1<<sh) + P2;
+}
+void* intal_multiply(void* intal1, void* intal2)
+{
+    char* num1 = (char*)intal1;
+    char* num2 = (char*)intal2;
+    char* product = multKaratsuba(num1,num2);
+    return product;
+}
 //Integer division
 //Returns the integer part of the quotient of intal1/intal2.
 //Returns "null" if intal2 is zero. A "null" pointer represents a NaN (not a number).

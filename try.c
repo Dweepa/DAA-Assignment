@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-
+#include<math.h>
 void* intal_create(const char* str)
 {
     char* intal = (char*)malloc(strlen(str));
@@ -178,8 +178,6 @@ void* intal_diff(void* intal1, void* intal2)
         strcpy(int1,num2);
         strcpy(int2,num1);
     }
-    free(num1);
-    free(num2);
     char* diff = (char*)malloc(max+1);
     for(x=0;x<max;x++)
         diff[x]='0';
@@ -231,6 +229,7 @@ void* intal_diff(void* intal1, void* intal2)
 }
 
 //Multiplies two intals and returns the product.
+/*
 char* rev(char* str)
 {
     int i = 0,temp=0;
@@ -354,7 +353,7 @@ void* intal_multiply(void* intal1, void* intal2)
         i++;
     printf("%s\n",product);
     return product+i;
-}
+}*/
 char* karatsuba(char* num1,char* num2)
  {
  int n1=strlen(num1),n2=strlen(num2),max=0,i=0;
@@ -414,32 +413,58 @@ char* karatsuba(char* num1,char* num2)
  char* p3 = intal_diff(intal_create(p2),intal_add(intal_create(p0),intal_create(p1)));
  
  }
-intal *mul10pow(_intal *x, long int y) {
-    void *create_by_length(long int n);
-    _intal *ans = create_by_length((x->num_digits) + y);
-    memcpy(ans->digits, x->digits, x->num_digits);
-    int i;
-    for (i = x->num_digits; i < ans->num_digits; i++)
-        ans->digits[i] = '0';
-    return ans;
-}
 
-//Integer division
-//Returns the integer part of the quotient of intal1/intal2.
-//Returns "null" if intal2 is zero. A "null" pointer represents a NaN (not a number).
+
 void* intal_divide(void* intal1, void* intal2)
 {
-    char* num1 = intal2str(intal1);
+    char* number = intal2str(intal1);
     char* num2 = intal2str(intal2);
-    int n1=strlen(num1);
+    int n1=strlen(number);
     int n2=strlen(num2);
+    if(n1<n2)
+        return "0";
     int i=0;
-    return 0;
+    long long int divisor=0;
+    long long int dividend=0;
+    
+    //printf("%s %s\n",number,num2);
+    while(num2!='\0'&& i<n2)
+    {
+        divisor+=(num2[i]-'0')*(pow(10,n2-i-1));
+       // printf("d: %lld ",divisor);
+        i++;
+    }
+    if (divisor==0)
+        return "null";
+    
+    //printf("Dividend:%lld  Divisor: %lld\n",dividend,divisor);
+    char* ans =(char*) malloc(n1);
+    
+    // Find prefix of number that is larger
+    // than divisor.
+    int idx = 0;
+    int temp = number[idx] - '0';
+        while (temp < divisor)
+    {
+        temp = temp * 10 + (number[++idx] - '0');
+        //printf("%d ",temp);
+    }
+    i=0;
+    while (strlen(number) > idx)
+    {
+        ans [i++]= (temp / divisor) + '0';
+        //printf("%c ",ans[i]);
+        temp = (temp % divisor) * 10 + number[++idx] - '0';
+    }
+    
+    if (strlen(ans) == 0)
+        return "0";
+    
+    return ans;
+    
 }
 
-//Returns -1, 0, +1
-//Returns 0 when both are equal.
-//Returns +1 when intal1 is greater, and -1 when intal2 is greater.
+
 int intal_compare(void* intal1, void* intal2)
 {
     char* num1 =(char*)intal1;
@@ -469,22 +494,64 @@ int intal_compare(void* intal1, void* intal2)
     return 0;
 }
 
-//Returns intal1^intal2.
-//It could be a really long integer for higher values of intal2.
-//0^n = 0. where n is any intal.
+
 void* intal_pow(void* intal1, void* intal2)
 {
-    char* num1 = intal2str(intal1);
-    char* num2 = intal2str(intal2);
+    char* num1 = (char*)(intal1);
+    char* num2 = (char*)(intal2);
     int n1=strlen(num1);
     int n2=strlen(num2);
-    int i=0;
-    return 0;
+    int i=0,j=0;
+    long long int base=0,power=0;
+    //printf("%s %s\n",num1,num2);
+    while(num2!='\0'&& i<n2)
+    {
+        power+=(num2[i]-'0')*(pow(10,n2-i-1));
+        i++;
+    }
+    
+     i=0;
+     while(num1!='\0'&& i<n1)
+     {
+     base+=(num1[i]-'0')*(pow(10,n1-i-1));
+     i++;
+     }
+    //printf("Base:%lld  Power:%lld ",base,power);
+    
+    if(base==0)
+        return "0";
+    long long int res = 1;
+        
+        while (power > 0)
+        {
+            if (power & 1)
+                res = res*base;
+            
+            power = power/2;
+            base=base*base;
+        }
+    i=0;
+    long long int temp = res;
+    //printf("%lld ",res);
+    while(res>0)
+    {
+        res=res/10;
+        i++;
+    }
+    char* exp = (char*)malloc(sizeof(char)*i);
+    for(j=0;j<i;j++)
+    {
+        exp[j]=(temp%10)+'0';
+        //printf("exp[%d]=%c ",j,exp[j]);
+        temp=temp/10;
+    }
+    return exp;
+    
 }
 
 int main(int argc, char const *argv[]) {
-    char *str1 = "10435415";
-    char *str2 = "1075125125312";
+    char *str1 = "30298";
+    char *str2 = "532";
     void *intal1;
     void *intal2;
     void *sum;
@@ -499,7 +566,7 @@ int main(int argc, char const *argv[]) {
     printf("First intal: %s\n", intal2str(intal1));
     printf("Second intal: %s\n", intal2str(intal2));
     
-    /*intal1 = intal_increment(intal1);
+    intal1 = intal_increment(intal1);
      intal2 = intal_decrement(intal2);
      
      printf("Two intals after increment and decrement:\n");
@@ -507,32 +574,33 @@ int main(int argc, char const *argv[]) {
      printf("%s\n", intal2str(intal2));
      
      printf("Max of two intals: %s\n", (intal_compare(intal1, intal2) > 0) ? intal2str(intal1) : intal2str(intal2));
-     
+    
+    
      sum = intal_add(intal1, intal2);
      printf("Sum: %s\n", intal2str(sum));
-     
+    
      diff = intal_diff(intal1, intal2);
      printf("Diff: %s\n", intal2str(diff));
-     */
     
-    product = intal_multiply1(intal1, intal2);
-    printf("Product: %s\n", intal2str(product));
-    quotient = intal_divide(intal1, intal2);
+    //product = intal_multiply(intal1, intal2);
+    //printf("Product: %s\n", intal2str(product));
+     quotient = intal_divide(intal1, intal2);
      printf("Quotient: %s\n", intal2str(quotient));
-     /*
+    
      exp = intal_pow(intal1, quotient);
      printf("%s ^ %s: %s\n", intal2str(intal1), intal2str(quotient), intal2str(exp));
-     
+    
      //Make sure you destroy all the intals created.
+    /*
      intal_destroy(sum);
      intal_destroy(diff);
      intal_destroy(product);
      intal_destroy(quotient);
      intal_destroy(exp);
      intal_destroy(intal1);	
-     intal_destroy(intal2);
+     intal_destroy(intal2);*/
      return 0;
-     */
+    
     
 }
 
