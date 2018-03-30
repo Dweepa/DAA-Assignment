@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+
 void* intal_create(const char* str)
 {
 	char* intal = (char*)malloc(strlen(str));
@@ -150,7 +151,7 @@ void* intal_diff(void* intal1, void* intal2)
     char* num1 = intal2str(intal1);
     char* num2 = intal2str(intal2);
     
-    printf("COMPARE %d \n",strcmp(num2,num1));
+    //printf("COMPARE %d \n",strcmp(num2,num1));
 
     char* int1,*int2;
     int n1=strlen(num1),n2=strlen(num2);
@@ -177,20 +178,21 @@ void* intal_diff(void* intal1, void* intal2)
         strcpy(int1,num2);
         strcpy(int2,num1);
     }
-
+    free(num1);
+    free(num2);
     char* diff = (char*)malloc(max+1);
     for(x=0;x<max;x++)
         diff[x]='0';
     diff[max+1]='\0';
     int d = max-min;
-    printf("\nint1: %s   int2:%s\n",int1,int2);
-    printf("diff: %s  min: %d  max: %d  d: %d  i:%d  j:%d\n", diff,min,max,d,i,j);
+    /*printf("\nint1: %s   int2:%s\n",int1,int2);
+    printf("diff: %s  min: %d  max: %d  d: %d  i:%d  j:%d\n", diff,min,max,d,i,j);*/
     
     max--;
     while(max>=d && i>=0 && j>=0)
     {
             temp = ((int1[i]-'0')-(int2[j]-'0')-(diff[max]-'0'));
-            printf("t:%2d  ",temp);
+            //printf("t:%2d  ",temp);
             if(temp<0)
             {
                 diff[max]=(temp+10)+'0';
@@ -200,45 +202,196 @@ void* intal_diff(void* intal1, void* intal2)
             {
                 diff[max]=temp+'0';
             }
-            printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
-            printf("diff:%s   ",diff);
+            /*printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
+            printf("diff:%s   ",diff);*/
             i--;
             j--;
             max--;
-            printf("%d %d %d\n",i,j,max);
+            //printf("%d %d %d\n",i,j,max);
     }
     for(x=max;x>=0;x--)
     {
-        printf("x:%2d  ",x);
+        //printf("x:%2d  ",x);
         diff[max]=((int1[x]-'0')-(diff[max]-'0'))+'0';
-        printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
-        printf("%s   \n",diff);
+        /*printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
+        printf("%s   \n",diff);*/
         max--;
         
     }
-        printf("y:%2d  ",x);
+    /*printf("y:%2d  ",x);
     printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);
-    printf("%s   \n",diff);
+    printf("%s   \n",diff);*/
     x=0;
     while(diff[x]=='0'&& diff[x]!='\0')
         x++;
-    printf("x: %d, diff:%lu\n",x,strlen(diff));
+    //printf("x: %d, diff:%lu\n",x,strlen(diff));
     if(x==strlen(diff))
         return "0";
     return diff+x;
 }
 
 //Multiplies two intals and returns the product.
+char* rev(char* str)
+{
+    int i = 0,temp=0;
+    int j = strlen(str) - 1;
+    
+    while (i < j) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+        i++;
+        j--;
+    }
+    return str;
+}
+
 void* intal_multiply(void* intal1, void* intal2)
 {
     char* num1 = intal2str(intal1);
     char* num2 = intal2str(intal2);
-    int n1=strlen(num1);
-    int n2=strlen(num2);
-    int i=0;
-    return 0;
+    int n1=strlen(num1),n2=strlen(num2);
+    int max=0,i,j,tmp=0;
+    char a[n1],b[n2];
+    int* mul=(int*)malloc(n1+n2);
     
+    printf("\nProduct: ");
+    char* product = (char*)malloc(n1+n2+1);
+    for(i=0;i<n1+n2;i++)
+        product[i]='0';
+    product[n1+n2+1]='\0';
+    printf("%s\n",product);
+    
+    printf("n1:%d  n2:%d  \n",n1,n2);
+    
+    for(i=n1-1,j=0;i>=0;i--,j++)
+    {
+        a[j] = num1[i]-'0';
+    }
+    for(i=n2-1,j=0;i>=0;i--,j++)
+    {
+        b[j] = num2[i]-'0';
+    }
+    for(i=0;i<n1;i++)
+    {
+        printf("a,b: %d  %d  ",a[i],b[i]);
+    }
+    printf("\nMul: ");
+    for(i=0;i<n1+n2;i++)
+    {
+        mul[i]=0;
+        printf("%d",mul[i]);
+    }
+    printf("\n\nMultiplying all the integers: \n");
+    for(i=0;i<n2;i++)
+    {
+        for(j=0;j<n1;j++)
+        {
+            printf("a:%2d b:%2d mul:%3d ==> ",a[j],b[i],mul[i+j]);
+            mul[i+j] += b[i]*a[j];
+            printf("%2d %2d %3d\n",a[j],b[i],mul[i+j]);
+        }
+    }
+    for(i=n1+n2-1;i>=0;i--)
+    {
+        printf("%d",mul[i]);
+    }
+    printf("\nTransferring the carry's:\n");
+    for(i=0;i<n1+n2;i++)
+    {
+        tmp = mul[i]/10;
+        mul[i] = mul[i]%10;
+        mul[i+1] = mul[i+1] + tmp;
+        printf("%d ",mul[i]);
+    }
+    printf("\n");
+    for(i=0;i<n1+n2;i++)
+    {
+        printf("%d ",mul[i]);
+    }
+    printf("\n");
+    //Extra zeroes in the beginning.
+    for(i=n1+n2-1;i>=0;i--)
+    {
+        if(mul[i] > 0)
+        {
+            printf("%d-%d  ",mul[i],i);
+            break;
+        }
+    }
+    max=n1+n2-1;
+    
+    j=i;
+    printf("\nP: max:%d j:%d i:%d\n",max,j,i);
+    for(j=i;j>=0;j--)
+    {
+        product[j]=mul[j]+'0';
+        printf("mul[%d]=%3d product[%d]=%3c\n",j,mul[j],j,product[j]);
+    }
+    printf("p: %s\n",product);
+    product=rev(product);
+    free(mul);
+    printf("%s\n",product);
+    return product;
 }
+/*char* karatsuba(char* num1,char* num2)
+{
+    int n1=strlen(num1),n2=strlen(num2),max=0,i=0;
+    
+    if(num1[i]-'0'<10 && num2[i]-'0'<10)
+        return ((num1[i]-'0')*(num2[i]-'0'))+'0';
+    
+    if(n1>n2)
+    {
+        max=n1;
+        int1 = (char*)malloc(max+1);
+        int2 = (char*)malloc(max+1);
+        
+        strcpy(int1,num1);
+        strcpy(int2+(n1-n2),num2);
+        for(i=(n1-n2);i>0;i--)
+            int2[i]='0';
+        
+        int1[max]='\0';
+        int2[max]='\0';
+    }
+    else if(n1<n2)
+    {
+        max=n2;
+        int1 = (char*)malloc(max+1);
+        int2 = (char*)malloc(max+1);
+        
+        strcpy(int2,num2);
+        strcpy(int1+(n2-n1),num1);
+        for(i=(n2-n1);i>0;i--)
+            int1[i]='0';
+        
+        int1[max]='\0';
+        int2[max]='\0';
+    }
+    free(num1);
+    free(num2);
+    else
+        max=n2;
+    int half = max/2;
+    
+    
+    char* num1_low = int1.substr(0,half);
+    char* num2_low = int2.substr(half,max-half);
+    char* num1_high = int1.substr(0,half);
+    char* num2_high = int2.substr(half,max-half);
+    
+    void* a1 = intal_create(num1_low);
+    void* a2 = intal_create(num1_high);
+    void* b1 = intal_create(num2_low);
+    void* b2 = intal_create(num2_high);
+    
+    char* p0 = karatsuba(num1_low,num2_low);
+    char* p1 = karatsuba(num1_high,num2_high);
+    char* p2 = karatsuba(intal_add(a1,a2),intal_add(b1,b2));
+    char* p3 = intal_diff(intal_create(p2),intal_add(intal_create(p0),intal_create(p1)));
+    
+}*/
 
 //Integer division
 //Returns the integer part of the quotient of intal1/intal2.
@@ -299,8 +452,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-	char *str1 = "6233";
-	char *str2 = "6231";
+	char *str1 = "10";
+	char *str2 = "9987";
 	void *intal1;
 	void *intal2;
 	void *sum;
@@ -309,35 +462,35 @@ int main(int argc, char const *argv[]) {
 	void *quotient;
 	void *exp;
 
-	intal1 = intal_create(str1); //4999
-	intal2 = intal_create(str2); //2001
+	intal1 = intal_create(str1);
+	intal2 = intal_create(str2);
 
-	printf("First intal: %s\n", intal2str(intal1)); //4999
-	printf("Second intal: %s\n", intal2str(intal2)); //2001
+	printf("First intal: %s\n", intal2str(intal1));
+	printf("Second intal: %s\n", intal2str(intal2));
 
-	intal1 = intal_increment(intal1); //5000
-	intal2 = intal_decrement(intal2); //2000
+	/*intal1 = intal_increment(intal1);
+	intal2 = intal_decrement(intal2);
 
 	printf("Two intals after increment and decrement:\n");
-	printf("%s\n", intal2str(intal1)); //5000
-	printf("%s\n", intal2str(intal2)); //2000
+	printf("%s\n", intal2str(intal1));
+	printf("%s\n", intal2str(intal2));
 
-	//printf("Max of two intals: %s\n", //5000
-	//	(intal_compare(intal1, intal2) > 0) ? intal2str(intal1) : intal2str(intal2));
+	printf("Max of two intals: %s\n", (intal_compare(intal1, intal2) > 0) ? intal2str(intal1) : intal2str(intal2));
 
-	sum = intal_add(intal1, intal2); //7000
+	sum = intal_add(intal1, intal2);
 	printf("Sum: %s\n", intal2str(sum));
 
-	diff = intal_diff(intal1, intal2); //3000
+	diff = intal_diff(intal1, intal2);
 	printf("Diff: %s\n", intal2str(diff));
-/*
-	product = intal_multiply(intal1, intal2); //10000000
+*/
+    
+	product = intal_multiply(intal1, intal2);
 	printf("Product: %s\n", intal2str(product));
 
-	quotient = intal_divide(intal1, intal2); //2
+	/*quotient = intal_divide(intal1, intal2);
 	printf("Quotient: %s\n", intal2str(quotient));
 
-	exp = intal_pow(intal1, quotient); //5000^2 = 25000000
+	exp = intal_pow(intal1, quotient);
 	printf("%s ^ %s: %s\n", intal2str(intal1), intal2str(quotient), intal2str(exp));
 
 	//Make sure you destroy all the intals created.

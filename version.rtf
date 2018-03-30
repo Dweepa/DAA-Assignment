@@ -1,0 +1,480 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red100\green56\blue32;\red196\green26\blue22;\red0\green0\blue0;
+\red157\green0\blue172;\red28\green0\blue207;\red0\green116\blue0;}
+{\*\expandedcolortbl;;\csgenericrgb\c39100\c22000\c12500;\csgenericrgb\c77000\c10200\c8600;\csgenericrgb\c0\c0\c0;
+\csgenericrgb\c61741\c0\c67387;\csgenericrgb\c11000\c0\c81000;\csgenericrgb\c0\c45600\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab890
+\pard\tx890\pardeftab890\pardirnatural\partightenfactor0
+
+\f0\fs36 \cf2 \CocoaLigature0 #include\cf3 <stdio.h>\cf4 \
+\cf2 #include\cf3 <string.h>\cf4 \
+\cf2 #include\cf3 <stdlib.h>\cf4 \
+\pard\tx890\pardeftab890\pardirnatural\partightenfactor0
+\cf5 void\cf4 * intal_create(\cf5 const\cf4  \cf5 char\cf4 * str)\
+\{\
+	\cf5 char\cf4 * intal = (\cf5 char\cf4 *)malloc(strlen(str));\
+	strcpy(intal,str);\
+	\cf5 return\cf4  intal;	\
+\}\
+\cf5 void\cf4  intal_destroy(\cf5 void\cf4 * intal)\
+\{\
+	free(intal);\
+\}\
+\
+\cf5 char\cf4 * intal2str(\cf5 void\cf4 * intal)\
+\{\
+	\cf5 return\cf4  (intal);\
+\}\
+\
+\cf5 void\cf4 * intal_increment(\cf5 void\cf4 * intal)\
+\{\
+	\cf5 char\cf4 * str = (\cf5 char\cf4 *)intal;\
+	\cf5 int\cf4  n = strlen(str),i=n-\cf6 1\cf4 ;\
+	\cf5 while\cf4 (str[i]==\cf6 '9'\cf4  && i>=\cf6 0\cf4 )\
+	\{\
+		str[i]=\cf6 '0'\cf4 ;\
+		i--;\
+	\}\
+	\cf5 if\cf4 (i<\cf6 0\cf4 )\
+	\{\
+		\cf5 char\cf4 * new = (\cf5 char\cf4 *)malloc(strlen(str)+\cf6 2\cf4 );\
+		new[\cf6 0\cf4 ]=\cf6 '1'\cf4 ;\
+		strcpy(new+\cf6 1\cf4 ,str);\
+		\
+		\cf7 //printf("%s %s",new,str);\cf4 \
+		new[n+\cf6 1\cf4 ]=\cf6 '\\0'\cf4 ;\
+		free(str);\
+		\cf5 return\cf4  new;\
+		\
+	\}\
+	\cf5 else\cf4 \
+	\{\
+		str[i]=((str[i]-\cf6 '0'\cf4 )+\cf6 1\cf4 )+\cf6 '0'\cf4 ;\
+		\cf5 return\cf4  str;\
+	\}\
+\}\
+\
+\cf5 void\cf4 * intal_decrement(\cf5 void\cf4 * intal)\
+\{\
+    \cf5 char\cf4 * str = (\cf5 char\cf4 *)intal;\
+	\cf5 int\cf4  n= strlen(intal);\
+	\cf5 int\cf4  i=n-\cf6 1\cf4 ;\
+	\cf5 while\cf4 (str[i]==\cf6 '0'\cf4  && i>\cf6 0\cf4 )\
+	\{\
+		str[i]=\cf6 '9'\cf4 ;\
+		i--;\
+	\}\
+	\cf5 if\cf4 (i>=\cf6 0\cf4 )\
+	\{\
+		str[i]=((str[i]-\cf6 '0'\cf4 )-\cf6 1\cf4 )+\cf6 '0'\cf4 ;\
+        \
+	\}\
+    \cf5 if\cf4 (str[\cf6 0\cf4 ]==\cf6 '0'\cf4 )\
+    \{\
+        \cf5 return\cf4  str+\cf6 1\cf4 ;\
+    \}\
+    \cf5 return\cf4  str;\
+\}\
+\
+\cf7 //Adds two intals and returns their sum.\cf4 \
+\cf5 void\cf4 * intal_add(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 = intal2str(intal1);\
+    \cf5 char\cf4 * num2 = intal2str(intal2);\
+    \cf5 char\cf4 * num;\
+    \cf5 int\cf4  n1=strlen(num1),n2=strlen(num2);\
+    \cf5 int\cf4  i=n1-\cf6 1\cf4 ,j=n2-\cf6 1\cf4 ,max=\cf6 0\cf4 ,min=\cf6 0\cf4  ,x=\cf6 0\cf4 ;\
+    \cf5 if\cf4 (n1>n2)\
+    \{\
+        max=n1;\
+        min=n2;\
+        num = (\cf5 char\cf4 *)malloc(n1);\
+        strcpy(num,num1);\
+    \}\
+    \cf5 else\cf4 \
+    \{\
+        max = n2;\
+        min=n1;\
+        num = (\cf5 char\cf4 *)malloc(n2);\
+        strcpy(num,num2);\
+    \}\
+    \cf5 char\cf4 * sum = (\cf5 char\cf4 *)malloc(max+\cf6 2\cf4 );\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<max+\cf6 1\cf4 ;i++)\
+        sum[i]=\cf6 '0'\cf4 ;\
+    sum[max+\cf6 1\cf4 ]=\cf6 '\\0'\cf4 ;\
+     \cf5 int\cf4  d = max-min;\
+    \cf7 //printf("sum: %s  min: %d  max: %d  d: %d\\n", sum,min,max,d);\cf4 \
+    \
+   \
+    i=n1-\cf6 1\cf4 ;\
+    \
+    \cf5 while\cf4 (max>=d && i>=\cf6 0\cf4  && j>=\cf6 0\cf4 )\
+    \{\
+      \cf5 if\cf4 (max!=\cf6 0\cf4 )\
+      \{\
+        sum[max]=((num1[i]-\cf6 '0'\cf4 )+(num2[j]-\cf6 '0'\cf4 )+(sum[max]-\cf6 '0'\cf4 ))+\cf6 '0'\cf4 ;\
+        \cf7 //printf("c:%d  ",sum[max]-'0');\cf4 \
+        \cf5 if\cf4 (sum[max]-\cf6 '0'\cf4 >\cf6 9\cf4 )\
+        \{\
+            sum[max]=((sum[max]-\cf6 '0'\cf4 )-\cf6 10\cf4 )+\cf6 '0'\cf4 ;\
+            sum[max-\cf6 1\cf4 ]=\cf6 '1'\cf4 ;\
+        \}\
+        \cf7 //printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);\cf4 \
+        i--;\
+        j--;\
+        max--;\
+        \cf7 //printf("sum:%s   ",sum);\cf4 \
+        \cf7 //printf("%d %d %d\\n",i,j,max);\cf4 \
+     \}\
+    \cf5 else\cf4 \
+        \cf5 break\cf4 ;\
+    \}\
+    \
+    \cf5 for\cf4 (x=max-\cf6 1\cf4 ;x>=\cf6 0\cf4 ;x--)\
+    \{\
+        \cf7 //printf("x:%d  ",x);\cf4 \
+        sum[max]=((num[x]-\cf6 '0'\cf4 )+(sum[max]-\cf6 '0'\cf4 ))+\cf6 '0'\cf4 ;\
+        \
+        \cf5 if\cf4 (sum[max]-\cf6 '0'\cf4 >\cf6 9\cf4 )\
+        \{\
+            sum[max]=((sum[max]-\cf6 '0'\cf4 )-\cf6 10\cf4 )+\cf6 '0'\cf4 ;\
+            sum[max-\cf6 1\cf4 ]=\cf6 '1'\cf4 ;\
+            \
+        \}\
+        max--;\
+        \cf7 //printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);\cf4 \
+        \cf7 //printf("%s   \\n",sum);\cf4 \
+    \}\
+    \cf7 /*printf("z:z  ");\
+    printf("sum[%d]:%c sum[%d]:%c    ",max-1,sum[max-1],max,sum[max]);\
+    printf("%s   \\n",sum);*/\cf4 \
+    \cf5 if\cf4 (sum[\cf6 0\cf4 ]==\cf6 '0'\cf4 )\
+        \cf5 return\cf4  sum+\cf6 1\cf4 ;\
+    \cf5 return\cf4  sum;\
+\}\
+\
+\cf7 //Returns the difference (obviously, nonnegative) of two intals.\cf4 \
+\cf5 void\cf4 * intal_diff(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 = intal2str(intal1);\
+    \cf5 char\cf4 * num2 = intal2str(intal2);\
+    \
+    \cf7 //printf("COMPARE %d \\n",strcmp(num2,num1));\cf4 \
+\
+    \cf5 char\cf4 * int1,*int2;\
+    \cf5 int\cf4  n1=strlen(num1),n2=strlen(num2);\
+    \cf5 int\cf4  i,j,max=\cf6 0\cf4 ,min=\cf6 0\cf4  ,x=\cf6 0\cf4 ,temp=\cf6 0\cf4 ;\
+    \cf5 if\cf4 (n1>n2 || ((n1==n2)&&(strcmp(num2,num1)<\cf6 0\cf4 )))\
+    \{\
+        max=n1;\
+        min=n2;\
+        i=n1-\cf6 1\cf4 ;\
+        j=n2-\cf6 1\cf4 ;\
+        int1 = (\cf5 char\cf4 *)malloc(n1);\
+        int2 = (\cf5 char\cf4 *)malloc(n2);\
+        strcpy(int1,num1);\
+        strcpy(int2,num2);\
+    \}\
+    \cf5 else\cf4  \cf5 if\cf4 (n2>n1 ||((n1==n2)&&(strcmp(num2,num1)>=\cf6 0\cf4 )))\
+    \{\
+        max=n2;\
+        min=n1;\
+        j=n1-\cf6 1\cf4 ;\
+        i=n2-\cf6 1\cf4 ;\
+        int1 = (\cf5 char\cf4 *)malloc(n2);\
+        int2 = (\cf5 char\cf4 *)malloc(n1);\
+        strcpy(int1,num2);\
+        strcpy(int2,num1);\
+    \}\
+    free(num1);\
+    free(num2);\
+    \cf5 char\cf4 * diff = (\cf5 char\cf4 *)malloc(max+\cf6 1\cf4 );\
+    \cf5 for\cf4 (x=\cf6 0\cf4 ;x<max;x++)\
+        diff[x]=\cf6 '0'\cf4 ;\
+    diff[max+\cf6 1\cf4 ]=\cf6 '\\0'\cf4 ;\
+    \cf5 int\cf4  d = max-min;\
+    \cf7 /*printf("\\nint1: %s   int2:%s\\n",int1,int2);\
+    printf("diff: %s  min: %d  max: %d  d: %d  i:%d  j:%d\\n", diff,min,max,d,i,j);*/\cf4 \
+    \
+    max--;\
+    \cf5 while\cf4 (max>=d && i>=\cf6 0\cf4  && j>=\cf6 0\cf4 )\
+    \{\
+            temp = ((int1[i]-\cf6 '0'\cf4 )-(int2[j]-\cf6 '0'\cf4 )-(diff[max]-\cf6 '0'\cf4 ));\
+            \cf7 //printf("t:%2d  ",temp);\cf4 \
+            \cf5 if\cf4 (temp<\cf6 0\cf4 )\
+            \{\
+                diff[max]=(temp+\cf6 10\cf4 )+\cf6 '0'\cf4 ;\
+                diff[max-\cf6 1\cf4 ]=\cf6 '1'\cf4 ;\
+            \}\
+            \cf5 else\cf4 \
+            \{\
+                diff[max]=temp+\cf6 '0'\cf4 ;\
+            \}\
+            \cf7 /*printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);\
+            printf("diff:%s   ",diff);*/\cf4 \
+            i--;\
+            j--;\
+            max--;\
+            \cf7 //printf("%d %d %d\\n",i,j,max);\cf4 \
+    \}\
+    \cf5 for\cf4 (x=max;x>=\cf6 0\cf4 ;x--)\
+    \{\
+        \cf7 //printf("x:%2d  ",x);\cf4 \
+        diff[max]=((int1[x]-\cf6 '0'\cf4 )-(diff[max]-\cf6 '0'\cf4 ))+\cf6 '0'\cf4 ;\
+        \cf7 /*printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);\
+        printf("%s   \\n",diff);*/\cf4 \
+        max--;\
+        \
+    \}\
+    \cf7 /*printf("y:%2d  ",x);\
+    printf("diff[%d]:%c diff[%d]:%c    ",max-1,diff[max-1],max,diff[max]);\
+    printf("%s   \\n",diff);*/\cf4 \
+    x=\cf6 0\cf4 ;\
+    \cf5 while\cf4 (diff[x]==\cf6 '0'\cf4 && diff[x]!=\cf6 '\\0'\cf4 )\
+        x++;\
+    \cf7 //printf("x: %d, diff:%lu\\n",x,strlen(diff));\cf4 \
+    \cf5 if\cf4 (x==strlen(diff))\
+        \cf5 return\cf4  \cf3 "0"\cf4 ;\
+    \cf5 return\cf4  diff+x;\
+\}\
+\
+\cf7 //Multiplies two intals and returns the product.\cf4 \
+\cf5 void\cf4 * intal_multiply1(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 return\cf4  \cf3 "0"\cf4 ;\
+\}\
+\
+\cf5 void\cf4 * intal_multiply(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 = intal2str(intal1);\
+    \cf5 char\cf4 * num2 = intal2str(intal2);\
+    \cf5 int\cf4  n1=strlen(num1),n2=strlen(num2);\
+    \cf5 int\cf4  max=\cf6 0\cf4 ,i,j,tmp=\cf6 0\cf4 ;\
+    \cf5 char\cf4  a[n1],b[n2];\
+    \
+    \cf5 int\cf4 * mul=(\cf5 int\cf4 *)malloc(n1+n2);\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<n1+n2;i++)\
+        mul[i]=\cf6 0\cf4 ;\
+    \
+    \cf5 char\cf4 * product = (\cf5 char\cf4 *)malloc(n1+n2+\cf6 2\cf4 );\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<=n1+n2;i++)\
+        product[i]=\cf6 '0'\cf4 ;\
+    product[n1+n2+\cf6 1\cf4 ]=\cf6 '\\0'\cf4 ;\
+    \
+    printf(\cf3 "n1:%d  n2:%d  \\n"\cf4 ,n1,n2);\
+    \
+    \cf5 for\cf4 (i=n1-\cf6 1\cf4 ,j=\cf6 0\cf4 ;i>=\cf6 0\cf4 ;i--,j++)\
+    \{\
+        a[j] = num1[i]-\cf6 '0'\cf4 ;\
+    \}\
+    \cf5 for\cf4 (i=n2-\cf6 1\cf4 ,j=\cf6 0\cf4 ;i>=\cf6 0\cf4 ;i--,j++)\
+    \{\
+        b[j] = num2[i]-\cf6 '0'\cf4 ;\
+    \}\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<=n1;i++)\
+    \{\
+        printf(\cf3 "%d  %d  \\n"\cf4 ,i,n1);\
+    \}\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<n2;i++)\
+    \{\
+        \cf5 for\cf4 (j=\cf6 0\cf4 ;j<n1;j++)\
+        \{\
+            mul[i+j] += b[i]*a[j];\
+        \}\
+    \}\
+    \cf5 for\cf4 (i=\cf6 0\cf4 ;i<n1+n2;i++)\
+    \{\
+        tmp = mul[i]/\cf6 10\cf4 ;\
+        mul[i] = mul[i]%\cf6 10\cf4 ;\
+        mul[i+\cf6 1\cf4 ] = mul[i+\cf6 1\cf4 ] + tmp;\
+    \}\
+    \cf5 for\cf4 (i=n1+n2;i>=\cf6 0\cf4 ;i--)\
+    \{\
+        \cf5 if\cf4 (mul[i] > \cf6 0\cf4 )\
+        \{\
+            mul[i-\cf6 1\cf4 ]=mul[i]/\cf6 10\cf4 ;\
+            mul[i]=mul[i]%\cf6 10\cf4 ;\
+        \}\
+    \}\
+    \cf5 for\cf4 (j=i;j>=\cf6 0\cf4 ;j--)\
+    \{\
+        product[max--]=mul[j]+\cf6 '0'\cf4 ;\
+    \}\
+    \cf5 return\cf4  product;\
+\}\
+\cf7 /*char* karatsuba(char* num1,char* num2)\
+\{\
+    int n1=strlen(num1),n2=strlen(num2),max=0,i=0;\
+    \
+    if(num1[i]-'0'<10 && num2[i]-'0'<10)\
+        return ((num1[i]-'0')*(num2[i]-'0'))+'0';\
+    \
+    if(n1>n2)\
+    \{\
+        max=n1;\
+        int1 = (char*)malloc(max+1);\
+        int2 = (char*)malloc(max+1);\
+        \
+        strcpy(int1,num1);\
+        strcpy(int2+(n1-n2),num2);\
+        for(i=(n1-n2);i>0;i--)\
+            int2[i]='0';\
+        \
+        int1[max]='\\0';\
+        int2[max]='\\0';\
+    \}\
+    else if(n1<n2)\
+    \{\
+        max=n2;\
+        int1 = (char*)malloc(max+1);\
+        int2 = (char*)malloc(max+1);\
+        \
+        strcpy(int2,num2);\
+        strcpy(int1+(n2-n1),num1);\
+        for(i=(n2-n1);i>0;i--)\
+            int1[i]='0';\
+        \
+        int1[max]='\\0';\
+        int2[max]='\\0';\
+    \}\
+    free(num1);\
+    free(num2);\
+    else\
+        max=n2;\
+    int half = max/2;\
+    \
+    \
+    char* num1_low = int1.substr(0,half);\
+    char* num2_low = int2.substr(half,max-half);\
+    char* num1_high = int1.substr(0,half);\
+    char* num2_high = int2.substr(half,max-half);\
+    \
+    void* a1 = intal_create(num1_low);\
+    void* a2 = intal_create(num1_high);\
+    void* b1 = intal_create(num2_low);\
+    void* b2 = intal_create(num2_high);\
+    \
+    char* p0 = karatsuba(num1_low,num2_low);\
+    char* p1 = karatsuba(num1_high,num2_high);\
+    char* p2 = karatsuba(intal_add(a1,a2),intal_add(b1,b2));\
+    char* p3 = intal_diff(intal_create(p2),intal_add(intal_create(p0),intal_create(p1)));\
+    \
+\}*/\cf4 \
+\
+\cf7 //Integer division\cf4 \
+\cf7 //Returns the integer part of the quotient of intal1/intal2.\cf4 \
+\cf7 //Returns "null" if intal2 is zero. A "null" pointer represents a NaN (not a number).\cf4 \
+\cf5 void\cf4 * intal_divide(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 = intal2str(intal1);\
+    \cf5 char\cf4 * num2 = intal2str(intal2);\
+    \cf5 int\cf4  n1=strlen(num1);\
+    \cf5 int\cf4  n2=strlen(num2);\
+    \cf5 int\cf4  i=\cf6 0\cf4 ;\
+    \cf5 return\cf4  \cf6 0\cf4 ;\
+\}\
+\
+\cf7 //Returns -1, 0, +1\cf4 \
+\cf7 //Returns 0 when both are equal.\cf4 \
+\cf7 //Returns +1 when intal1 is greater, and -1 when intal2 is greater.\cf4 \
+\cf5 int\cf4  intal_compare(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 =(\cf5 char\cf4 *)intal1;\
+    \cf5 char\cf4 * num2 =(\cf5 char\cf4 *)intal2;\
+    \cf5 int\cf4  i=\cf6 0\cf4 ;\
+    \cf5 int\cf4  n1=strlen(num1);\
+    \cf5 int\cf4  n2=strlen(num2);\
+    \
+    \cf5 if\cf4  (n1<n2)\
+        \cf5 return\cf4  -\cf6 1\cf4 ;\
+    \cf5 else\cf4  \cf5 if\cf4 (n1>n2)\
+        \cf5 return\cf4  \cf6 1\cf4 ;\
+    \cf5 else\cf4 \
+    \{\
+        \cf5 while\cf4 (num1[i]==num2[i])\
+            i++;\
+        \cf5 if\cf4  (i==n1-\cf6 1\cf4 )\
+            \cf5 return\cf4  \cf6 0\cf4 ;\
+        \cf5 else\cf4 \
+        \{\
+            \cf5 if\cf4 (num1[i]<num2[i])\
+                \cf5 return\cf4  -\cf6 1\cf4 ;\
+            \cf5 else\cf4  \cf5 if\cf4 (num1[i]>num2[i])\
+                \cf5 return\cf4  \cf6 1\cf4 ;\
+        \}\
+    \}\
+    \cf5 return\cf4  \cf6 0\cf4 ;\
+\}\
+\
+\cf7 //Returns intal1^intal2.\cf4 \
+\cf7 //It could be a really long integer for higher values of intal2.\cf4 \
+\cf7 //0^n = 0. where n is any intal.\cf4 \
+\cf5 void\cf4 * intal_pow(\cf5 void\cf4 * intal1, \cf5 void\cf4 * intal2)\
+\{\
+    \cf5 char\cf4 * num1 = intal2str(intal1);\
+    \cf5 char\cf4 * num2 = intal2str(intal2);\
+    \cf5 int\cf4  n1=strlen(num1);\
+    \cf5 int\cf4  n2=strlen(num2);\
+    \cf5 int\cf4  i=\cf6 0\cf4 ;\
+    \cf5 return\cf4  \cf6 0\cf4 ;\
+\}\
+\
+\cf5 int\cf4  main(\cf5 int\cf4  argc, \cf5 char\cf4  \cf5 const\cf4  *argv[]) \{\
+	\cf5 char\cf4  *str1 = \cf3 "99"\cf4 ;\
+	\cf5 char\cf4  *str2 = \cf3 "10"\cf4 ;\
+	\cf5 void\cf4  *intal1;\
+	\cf5 void\cf4  *intal2;\
+	\cf5 void\cf4  *sum;\
+	\cf5 void\cf4  *diff;\
+	\cf5 void\cf4  *product;\
+	\cf5 void\cf4  *quotient;\
+	\cf5 void\cf4  *exp;\
+\
+	intal1 = intal_create(str1);\
+	intal2 = intal_create(str2);\
+\
+	printf(\cf3 "First intal: %s\\n"\cf4 , intal2str(intal1));\
+	printf(\cf3 "Second intal: %s\\n"\cf4 , intal2str(intal2));\
+\
+	\cf7 /*intal1 = intal_increment(intal1);\
+	intal2 = intal_decrement(intal2);\
+\
+	printf("Two intals after increment and decrement:\\n");\
+	printf("%s\\n", intal2str(intal1));\
+	printf("%s\\n", intal2str(intal2));\
+\
+	printf("Max of two intals: %s\\n", (intal_compare(intal1, intal2) > 0) ? intal2str(intal1) : intal2str(intal2));\
+\
+	sum = intal_add(intal1, intal2);\
+	printf("Sum: %s\\n", intal2str(sum));\
+\
+	diff = intal_diff(intal1, intal2);\
+	printf("Diff: %s\\n", intal2str(diff));\
+*/\cf4 \
+	product = intal_multiply(intal1, intal2);\
+	printf(\cf3 "Product: %s\\n"\cf4 , intal2str(product));\
+\
+	\cf7 /*quotient = intal_divide(intal1, intal2);\
+	printf("Quotient: %s\\n", intal2str(quotient));\
+\
+	exp = intal_pow(intal1, quotient);\
+	printf("%s ^ %s: %s\\n", intal2str(intal1), intal2str(quotient), intal2str(exp));\
+\
+	//Make sure you destroy all the intals created.\
+	intal_destroy(sum);\
+	intal_destroy(diff);\
+	intal_destroy(product);\
+	intal_destroy(quotient);\
+	intal_destroy(exp);\
+	intal_destroy(intal1);	\
+	intal_destroy(intal2);\
+	return 0;\
+    */\cf4 \
+    \
+\}\
+\
+\
+\
+}
