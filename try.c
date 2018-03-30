@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+
 void* intal_create(const char* str)
 {
     char* intal = (char*)malloc(strlen(str));
@@ -228,6 +229,8 @@ void* intal_diff(void* intal1, void* intal2)
         return "0";
     return diff+x;
 }
+
+//Multiplies two intals and returns the product.
 char* rev(char* str)
 {
     int i = 0,temp=0;
@@ -241,11 +244,6 @@ char* rev(char* str)
         j--;
     }
     return str;
-}
-//Multiplies two intals and returns the product.
-void* intal_multiply1(void* intal1, void* intal2)
-{
-    return "0";
 }
 
 void* intal_multiply(void* intal1, void* intal2)
@@ -331,10 +329,13 @@ void* intal_multiply(void* intal1, void* intal2)
         printf("mul[%d]=%3d product[%d]=%3c\n",j,mul[j],j,product[j]);
     }
     printf("p: %s\n",product);
-    product = rev(product);
+    product=rev(product);
     free(mul);
+    i=0;
+    while(product[i]=='0')
+        i++;
     printf("%s\n",product);
-    return product;
+    return product+i;
 }
 /*char* karatsuba(char* num1,char* num2)
  {
@@ -406,33 +407,6 @@ void* intal_divide(void* intal1, void* intal2)
     int n2=strlen(num2);
     int i=0;
     return 0;
-    /*string ans;
-     
-     // Find prefix of number that is larger
-     // than divisor.
-     int idx = 0;
-     int temp = number[idx] - '0';
-     while (temp < divisor)
-     temp = temp * 10 + (number[++idx] - '0');
-     
-     // Repeatedly divide divisor with temp. After
-     // every division, update temp to include one
-     // more digit.
-     while (number.size() > idx)
-     {
-     // Store result in answer i.e. temp / divisor
-     ans += (temp / divisor) + '0';
-     
-     // Take next digit of number
-     temp = (temp % divisor) * 10 + number[++idx] - '0';
-     }
-     
-     // If divisor is greater than number
-     if (ans.length() == 0)
-     return "0";
-     
-     // else return ans
-     return ans;*/
 }
 
 //Returns -1, 0, +1
@@ -481,8 +455,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-    char *str1 = "100000000";
-    char *str2 = "9999";
+    char *str1 = "1040";
+    char *str2 = "1079";
     void *intal1;
     void *intal2;
     void *sum;
@@ -512,6 +486,7 @@ int main(int argc, char const *argv[]) {
      diff = intal_diff(intal1, intal2);
      printf("Diff: %s\n", intal2str(diff));
      */
+    
     product = intal_multiply(intal1, intal2);
     printf("Product: %s\n", intal2str(product));
     
