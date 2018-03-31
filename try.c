@@ -354,66 +354,110 @@ void* intal_multiply(void* intal1, void* intal2)
     printf("%s\n",product);
     return product+i;
 }*/
-char* karatsuba(char* num1,char* num2)
- {
- int n1=strlen(num1),n2=strlen(num2),max=0,i=0;
- 
- if(num1[i]-'0'<10 && num2[i]-'0'<10)
- return ((num1[i]-'0')*(num2[i]-'0'))+'0';
- 
- if(n1>n2)
- {
- max=n1;
- int1 = (char*)malloc(max+1);
- int2 = (char*)malloc(max+1);
- 
- strcpy(int1,num1);
- strcpy(int2+(n1-n2),num2);
- for(i=(n1-n2);i>0;i--)
- int2[i]='0';
- 
- int1[max]='\0';
- int2[max]='\0';
- }
- else if(n1<n2)
- {
- max=n2;
- int1 = (char*)malloc(max+1);
- int2 = (char*)malloc(max+1);
- 
- strcpy(int2,num2);
- strcpy(int1+(n2-n1),num1);
- for(i=(n2-n1);i>0;i--)
- int1[i]='0';
- 
- int1[max]='\0';
- int2[max]='\0';
- }
- free(num1);
- free(num2);
- else
- max=n2;
- int half = max/2;
- 
- 
- char* num1_low = int1.substr(0,half);
- char* num2_low = int2.substr(half,max-half);
- char* num1_high = int1.substr(0,half);
- char* num2_high = int2.substr(half,max-half);
- 
- void* a1 = intal_create(num1_low);
- void* a2 = intal_create(num1_high);
- void* b1 = intal_create(num2_low);
- void* b2 = intal_create(num2_high);
- 
- char* p0 = karatsuba(num1_low,num2_low);
- char* p1 = karatsuba(num1_high,num2_high);
- intal_add(a1,a2)
- char* p2 = karatsuba(,intal_add(b1,b2));
- char* p3 = intal_diff(intal_create(p2),intal_add(intal_create(p0),intal_create(p1)));
- 
- }
 
+char *increase_length(long int n)
+{
+    char *digits = (char *)calloc(n + 1, sizeof(char));
+    return digits;
+}
+void *mul10(void* base, long long int power)
+{
+    int b = strlen(intal2str(base));
+    char *ans = increase_length(b + power);
+    memcpy(ans, intal2str(base), b);
+    int i;
+    for (i=b; i<(b+power); i++)
+        ans[i] = '0';
+    return ans;
+}
+char* substring ( char* input, int offset, int len)
+{
+    char* dest=(char*)malloc(sizeof(char)*(len));
+    int input_len = strlen (input);
+    if (offset + len > input_len)
+    {
+        return NULL;
+    }
+    strncpy (dest, input + offset, len);
+    return dest;
+}
+char* karatsuba(char* num1,char* num2)
+{
+    int n1=strlen(num1),n2=strlen(num2),max=0,i=0;
+    char* int1,*int2;
+    if(n2==1|| n1==1)
+    {
+        char r = ((num1[i]-'0')*(num2[i]-'0'))+'0';
+        char* pro = (char*)malloc(sizeof(char)*2);
+        pro[0]=r;
+        pro[1]='\0';
+    }
+    if(n1>n2)
+    {
+     max=n1;
+      int1 = (char*)malloc(max+1);
+      int2 = (char*)malloc(max+1);
+ 
+     strcpy(int1,num1);
+     strcpy(int2+(n1-n2),num2);
+     for(i=(n1-n2);i>0;i--)
+         int2[i]='0';
+ 
+     int1[max]='\0';
+     int2[max]='\0';
+    }
+    else if(n1<n2)
+    {
+     max=n2;
+        
+       int1 = (char*)malloc(max+1);
+       int2 = (char*)malloc(max+1);
+     strcpy(int2,num2);
+     strcpy(int1+(n2-n1),num1);
+     for(i=(n2-n1);i>0;i--)
+         int1[i]='0';
+ 
+     int1[max]='\0';
+     int2[max]='\0';
+    }
+    else
+        max=n2;
+    int half = max/2;
+ 
+ 
+    char* num1_high = substring(int1,0,half);
+    char* num1_low = substring(int1,half,max-half);
+    char* num2_high = substring(int2,0,half);
+    char* num2_low = substring(int2,half,max-half);
+ 
+    void* a1 = intal_create(num1_low);
+    void* a2 = intal_create(num1_high);
+    void* b1 = intal_create(num2_low);
+    void* b2 = intal_create(num2_high);
+ 
+    char* p0 = karatsuba(num1_low,num2_low);
+    char* p1 = karatsuba(num1_high,num2_high);
+    char* p2 = karatsuba(intal_add(b1,b2),intal_add(b1,b2));
+    void* a = intal_create(p1);
+    void* b = intal_create(p0);
+    void* c = intal_add(a,b);
+    void* d = intal_create(p2);
+    void* e = intal_diff(c,d);
+    char* p3 = intal2str(e);
+ 
+    char* intermediate = intal_add(mul10(b,half*2),mul10(e,half));
+    char* final = intal_add(intermediate,a);
+    
+    return final;
+}
+
+void* intal_multiply(void* intal1, void* intal2)
+{
+    char* num1 = (char*)intal1;
+    char* num2 = (char*)intal2;
+    char* mul = karatsuba(num1,num2);
+    return mul;
+}
 
 void* intal_divide(void* intal1, void* intal2)
 {
@@ -550,8 +594,8 @@ void* intal_pow(void* intal1, void* intal2)
 }
 
 int main(int argc, char const *argv[]) {
-    char *str1 = "30298";
-    char *str2 = "532";
+    char *str1 = "20";
+    char *str2 = "10";
     void *intal1;
     void *intal2;
     void *sum;
@@ -582,8 +626,8 @@ int main(int argc, char const *argv[]) {
      diff = intal_diff(intal1, intal2);
      printf("Diff: %s\n", intal2str(diff));
     
-    //product = intal_multiply(intal1, intal2);
-    //printf("Product: %s\n", intal2str(product));
+    product = intal_multiply(intal1, intal2);
+    printf("Product: %s\n", intal2str(product));
      quotient = intal_divide(intal1, intal2);
      printf("Quotient: %s\n", intal2str(quotient));
     
